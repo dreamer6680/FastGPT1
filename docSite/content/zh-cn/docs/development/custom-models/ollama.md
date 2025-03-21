@@ -28,13 +28,62 @@ docker run --rm -d --name ollama -p 11434:11434 ollama/ollama
 docker run --rm -d --name ollama --network （你的 Fastgpt 容器所在网络） -p 11434:11434 ollama/ollama
 ```
 
+### 主机安装
+
+如果你不想使用 Docker ，也可以采用主机安装，以下是主机安装的一些方式。
+
+#### MacOS
+
+如果你使用的是 macOS，且系统中已经安装了 Homebrew 包管理器，可通过以下命令来安装 Ollama：
+
+```bash
+brew install ollama
+ollama serve #安装完成后，使用该命令启动服务
+```
+
+#### Linux
+
+在 Linux 系统上，你可以借助包管理器来安装 Ollama。以 Ubuntu 为例，在终端执行以下命令：
+
+```bash
+curl https://ollama.com/install.sh | sh #此命令会从官方网站下载并执行安装脚本。
+ollama serve #安装完成后，同样启动服务
+```
+
+#### Windows
+
+在 Windows 系统中，你可以从 Ollama 官方网站 下载 Windows 版本的安装程序。下载完成后，运行安装程序，按照安装向导的提示完成安装。安装完成后，在命令提示符或 PowerShell 中启动服务：
+
+```bash
+ollama serve #安装完成并启动服务后，你可以在浏览器中访问 http://localhost:11434 来验证 Ollama 是否安装成功。
+```
+
+#### 补充说明
+
+如果你是采用的主机应用 Ollama 而不是镜像，需要确保你的 Ollama 可以监听0.0.0.0。
+
+##### 1. Linxu 系统
+
+如果 Ollama 作为 systemd 服务运行，打开终端，编辑 Ollama 的 systemd 服务文件，使用命令sudo systemctl edit ollama.service，在[Service]部分添加Environment="OLLAMA_HOST=0.0.0.0"。保存并退出编辑器，然后执行sudo systemctl daemon - reload和sudo systemctl restart ollama使配置生效。
+
+##### 2. MacOS 系统
+
+打开终端，使用launchctl setenv ollama_host "0.0.0.0"命令设置环境变量，然后重启 Ollama 应用程序以使更改生效。
+
+##### 3. Windows 系统
+
+通过 “开始” 菜单或搜索栏打开 “编辑系统环境变量”，在 “系统属性” 窗口中点击 “环境变量”，在 “系统变量” 部分点击 “新建”，创建一个名为OLLAMA_HOST的变量，变量值设置为0.0.0.0，点击 “确定” 保存更改，最后从 “开始” 菜单重启 Ollama 应用程序。
+
+### 测试通信
+
 在安装完成后，需要进行检测测试，首先进入 FastGPT 所在的容器，尝试访问自己的 Ollama 容器，命令如下：
 
 ```bash
 docker exec -it 容器名 /bin/sh
 curl http://XXX.XXX.XXX.XXX:11434  #ip地址不能是localhost
 ```
-看到访问显示自己的 Ollama 服务以及启动，说明两个容器可以正常通信。
+
+看到访问显示自己的 Ollama 服务以及启动，说明可以正常通信。
 
 ## 将 Ollama 接入 FastGPT
 
@@ -64,6 +113,6 @@ curl http://XXX.XXX.XXX.XXX:11434  #ip地址不能是localhost
 
 ### 3. 直接接入
 
-如果你既不想使用 AI Proxy，也不想使用 OneAPI，也可以选择直接接入，修改部署 FastGPT 的 docker-compose.yml 文件，在其中将 AI Proxy 的使用注释，采用和 OneAPI 的类似配置。注释掉 AIProxy 相关代码，在OPENAI_BASE_URL中加入自己的 Ollama 开放地址，默认是http://自己的IP:端口/v1，v1必须填写。在KEY中随便填入，因为 Ollama 默认没有鉴权，如果开启鉴权，请自行填写。其他操作和在 OneAPI 中加入 Ollama 一致，只需在 FastGPT 中加入自己的模型即可使用。
+如果你既不想使用 AI Proxy，也不想使用 OneAPI，也可以选择直接接入，修改部署 FastGPT 的 docker-compose.yml 文件，在其中将 AI Proxy 的使用注释，采用和 OneAPI 的类似配置。注释掉 AIProxy 相关代码，在OPENAI_BASE_URL中加入自己的 Ollama 开放地址，默认是http://自己的IP:端口/v1，强调:不可以使用localhost,v1必须填写。在KEY中随便填入，因为 Ollama 默认没有鉴权，如果开启鉴权，请自行填写。其他操作和在 OneAPI 中加入 Ollama 一致，只需在 FastGPT 中加入自己的模型即可使用。
 
 ![](/imgs/Ollama-models-direct3.png)
