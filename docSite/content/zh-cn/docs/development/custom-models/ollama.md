@@ -1,17 +1,17 @@
 ---
-title: '使用 Ollama 接入本地模型 '
-description: ' 采用 Ollama 部署自己的模型'
+title: '使用ollama接入本地模型 '
+description: ' 采用ollama部署自己的模型'
 icon: 'api'
 draft: false
 toc: true
 weight: 950
 ---
 
-[Ollama](https://ollama.com/) 是一个开源的AI大模型部署工具，专注于简化大语言模型的部署和使用，支持一键下载和运行各种大模型。
+[ollama](https://ollama.com/) Ollama是一个开源的AI大模型部署工具，专注于简化大语言模型的部署和使用，支持一键下载和运行各种大模型。
 
 ## 安装 Ollama
 
-Ollama 本身支持多种安装方式，但是推荐使用 Docker 拉取镜像部署。如果是个人设备上安装了 Ollama 后续需要解决如何让 Docker 中 FastGPT 容器访问宿主机 Ollama的问题，较为麻烦。 
+Ollama 本身支持多种安装方式，但是推荐使用 Docker 拉取镜像部署。如果是个人设备上安装了 Ollama 后续需要解决如何让 Docker 中 Fastgpt 容器访问宿主机 Ollama的问题，较为麻烦。 
 
 ### Docker 安装（推荐）
 
@@ -22,50 +22,99 @@ docker pull ollama/ollama
 docker run --rm -d --name ollama -p 11434:11434 ollama/ollama
 ```
 
-如果你的 FastGPT 是在 Docker 中进行部署的，建议在拉取 Ollama 镜像时保证和 FastGPT 镜像处于同一网络，否则可能出现 FastGPT 无法访问的问题，命令如下：
+如果你的 fastgpt 是在 Docker 中进行部署的，建议在拉取 Ollama 镜像时保证和 Fastgpt 镜像处于同一网络，否则可能出现 Fastgpt 无法访问的问题，命令如下：
 
 ```bash
 docker run --rm -d --name ollama --network （你的 Fastgpt 容器所在网络） -p 11434:11434 ollama/ollama
 ```
 
-在安装完成后，需要进行检测测试，首先进入 FastGPT 所在的容器，尝试访问自己的 Ollama 容器，命令如下：
+### 设备安装
 
-```bash
-docker exec -it 容器名 /bin/sh
-curl http://XXX.XXX.XXX.XXX:11434  #ip地址不能是localhost
-```
-看到访问显示自己的 Ollama 服务以及启动，说明两个容器可以正常通信。
+目前 Ollama 已经支持在设备上直接安装下载，你可以在 [ Ollama 官网](https://ollama.com/)上进行安装下载。
 
-## 将 Ollama 接入 FastGPT
+
+
+## 将 Ollama 接入 Fastgpt
 
 ### 1. AI Proxy 接入
 
-如果你采用的是 FastGPT 中的默认配置文件部署[这里](/docs/development/docker.md)，即默认采用 AI Proxy 进行启动。以及在确保你的 FastGPT 可以直接访问 Ollama 容器的情况下，就可以运行 FastGPT ，在页面中选择账号->模型提供商->模型渠道->新增渠道。
-
-![](/imgs/Ollama-models1.png)
-
+如果你采用的是 Fastgpt 中的默认配置文件部署[这里](/docs/development/docker.md)，即默认采用 AI Proxy 进行启动。以及在确保你的 Fastgpt 可以直接访问 Ollama 容器的情况下，就可以运行 Fastgpt ，在页面中选择账号->模型提供商->模型渠道->新增渠道。
+![](/docSite\assets\imgs\Ollama-models1.png)
 在渠道选择中选择 Ollama ，然后加入自己拉取的模型，最后填入代理地址，如果是容器中安装 Ollama ，代理地址中的 localhost 替换为自己的ip地址。
-
-![](/imgs/Ollama-models2.png)
-
-最后，在模型配置中，加入自己的模型即可开发使用，具体参考[这里](/docs/development/modelConfig/intro.md)。
+![](/docSite\assets\imgs\Ollama-models2.png)
+最后，在模型配置中，加入自己的模型即可开发使用，具体参考[这里](/docSite\content\zh-cn\docs\development\modelConfig\intro.md)。
 
 ### 2. OneAPI 接入
 
-如果你想使用 OneAPI ，可以首先修改部署 FastGPT 的 docker-compose.yml 文件，在其中将 AI Proxy 的使用注释，在 OPENAI_BASE_URL 中加入自己的 OneAPI 开放地址，默认是http://自己的IP:端口/v1，v1必须填写。KEY 中填写自己在 OneAPI 的令牌。
+我们也可以使用 Xinference 的命令行工具来启动模型，默认 Model UID 是 qwen-chat（后续通过将通过这个 ID 来访问模型）。
 
-![](/imgs/Ollama-models-oneapi1.png)
+```bash
+xinference launch -n qwen-chat - 14 -f pytorch
+```
 
-进入 OneAPI 页面，添加新的渠道，类型选择 Ollama ，在模型中填入自己 Ollama 中的模型，需要保证名字对应，再在下方填入自己的 Ollama 代理地址，默认http://自己的IP:端口，不需要填写/v1。添加成功后在 OneAPI 进行渠道测试，测试成功则说明添加成功。
+除了 WebUI 和命令行工具， Xinference 还提供了 Python SDK 和 RESTful API 等多种交互方式， 更多用法可以参考 [Xinference 官方文档](https://inference.readthedocs.io/en/latest/getting_started/index.html)。
 
-在 FastGPT 中点击账号->模型提供商->模型配置->新增模型，添加自己的模型即可，添加模型时需要保证模型ID和Ollama中的模型ID一致。
+## 将本地模型接入 One API
 
-![](/imgs/Ollama-models-direct2.png)
+One API 的部署和接入请参考[这里](/docs/development/modelconfig/one-api/)。
 
-### 3. 直接接入
-如果你既不想使用 AI Proxy，也不想使用 OneAPI，也可以选择直接接入，修改部署 FastGPT 的 docker-compose.yml 文件，在其中将 AI Proxy 的使用注释，采用和 OneAPI 的类似配置。注释掉 AIProxy 相关代码，在OPENAI_BASE_URL中加入自己的 Ollama 开放地址，默认是http://自己的IP:端口/v1，v1必须填写。在KEY中随便填入，因为 Ollama 默认没有鉴权，如果开启鉴权，请自行填写。其他操作和在 OneAPI 中加入 Ollama 一致，只需在 FastGPT 中加入自己的模型即可使用。
+为 qwen1.5-chat 添加一个渠道，这里的 Base 网站 需要填 Xinference 服务的端点，并且注册 qwen-chat (模型的 UID) 。
+
+![](/imgs/one-api-add-xinference-models.jpg)
+
+可以使用以下命令进行测试：
+
+```bash
+curl --location --请求 POST 'https://<oneapi_url>/v1/chat/completions' \
+--header 'Authorization: Bearer <oneapi_token>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "model": "qwen-chat",
+  "messages": [{"role": "user", "content": "Hello!"}]
+}'
+```
+
+将 <oneapi_url> 替换为你的 One API 地址，<oneapi_token> 替换为你的 One API 令牌。model 为刚刚在 One API 填写的自定义模型。
+
+## 将本地模型接入 FastGPT
+
+修改 FastGPT 的 `config.json` 配置文件的 llmModels 部分加入 qwen-chat 模型：
+
+```json
+...
+  "llmModels": [
+    {
+      "model": "qwen-chat", // 模型名(对应OneAPI中渠道的模型名)
+      "name": "Qwen", // 模型别名
+      "avatar": "/imgs/model/Qwen.svg", // 模型的logo
+      "maxContext": 125000, // 最大上下文
+      "maxResponse": 4000, // 最大回复
+      "quoteMaxToken": 120000, // 最大引用内容
+      "maxTemperature": 1.2, // 最大温度
+      "charsPointsPrice": 0, // n积分/1k token（商业版）
+      "censor": false, // 是否开启敏感校验（商业版）
+      "vision": true, // 是否支持图片输入
+      "datasetProcess": true, // 是否设置为知识库处理模型（QA），务必保证至少有一个为true，否则知识库会报错
+      "usedInClassify": true, // 是否用于问题分类（务必保证至少有一个为true）
+      "usedInExtractFields": true, // 是否用于内容提取（务必保证至少有一个为true）
+      "usedInToolCall": true, // 是否用于工具调用（务必保证至少有一个为true）
+      "toolChoice": true, // 是否支持工具选择（分类，内容提取，工具调用会用到。）
+      "functionCall": false, // 是否支持函数调用（分类，内容提取，工具调用会用到。会优先使用 toolChoice，如果为false，则使用 functionCall，如果仍为 false，则使用提示词模式）
+      "customCQPrompt": "", // 自定义文本分类提示词（不支持工具和函数调用的模型
+      "customExtractPrompt": "", // 自定义内容提取提示词
+      "defaultSystemChatPrompt": "", // 对话默认携带的系统提示词
+      "defaultConfig": {} // 请求API时，挟带一些默认配置（比如 GLM4 的 top_p）
+    }
+  ],
+...
+```
+
+然后重启 FastGPT 就可以在应用配置中选择 Qwen 模型进行对话：
+
+![](/imgs/fastgpt-list-models.png)
 
 ---
 
++ 参考：[FastGPT + Xinference：一站式本地 LLM 私有化部署和应用开发](https://xorbits.cn/blogs/fastgpt-weather-chat)
 
 
