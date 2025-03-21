@@ -44,7 +44,7 @@ curl http://XXX.XXX.XXX.XXX:11434  #ip地址不能是localhost
 
 ![](/imgs/Ollama-models1.png)
 
-在渠道选择中选择 Ollama ，然后加入自己拉取的模型，最后填入代理地址，如果是容器中安装 Ollama ，代理地址中的 localhost 替换为自己的ip地址。
+在渠道选择中选择 Ollama ，然后加入自己拉取的模型：补充说明，如果没有预设的模型，则需要新建一个模型。填入代理地址，如果是容器中安装 Ollama ，代理地址中的 localhost 替换为自己的ip地址。
 
 ![](/imgs/Ollama-models2.png)
 
@@ -56,16 +56,14 @@ curl http://XXX.XXX.XXX.XXX:11434  #ip地址不能是localhost
 
 ![](/imgs/Ollama-models-oneapi1.png)
 
-进入 OneAPI 页面，添加新的渠道，类型选择 Ollama ，在模型中填入自己 Ollama 中的模型，需要保证名字对应，再在下方填入自己的 Ollama 代理地址，默认http://自己的IP:端口，不需要填写/v1。添加成功后在 OneAPI 进行渠道测试，测试成功则说明添加成功。
+进入 OneAPI 页面，添加新的渠道，类型选择 Ollama ，在模型中填入自己 Ollama 中的模型，需要保证添加的模型名称和 Ollama 中一致，再在下方填入自己的 Ollama 代理地址，默认http://自己的IP:端口，不需要填写/v1。添加成功后在 OneAPI 进行渠道测试，测试成功则说明添加成功。
 
-在 FastGPT 中点击账号->模型提供商->模型配置->新增模型，添加自己的模型即可，添加模型时需要保证模型ID和Ollama中的模型ID一致。
+在 FastGPT 中点击账号->模型提供商->模型配置->新增模型，添加自己的模型即可，添加模型时需要保证模型ID和 OneAPI 中的模型名称一致。
 
 ![](/imgs/Ollama-models-direct2.png)
 
 ### 3. 直接接入
+
 如果你既不想使用 AI Proxy，也不想使用 OneAPI，也可以选择直接接入，修改部署 FastGPT 的 docker-compose.yml 文件，在其中将 AI Proxy 的使用注释，采用和 OneAPI 的类似配置。注释掉 AIProxy 相关代码，在OPENAI_BASE_URL中加入自己的 Ollama 开放地址，默认是http://自己的IP:端口/v1，v1必须填写。在KEY中随便填入，因为 Ollama 默认没有鉴权，如果开启鉴权，请自行填写。其他操作和在 OneAPI 中加入 Ollama 一致，只需在 FastGPT 中加入自己的模型即可使用。
 
----
-
-
-
+![](/imgs/Ollama-models-direct3.png)
