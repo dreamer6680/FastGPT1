@@ -80,6 +80,7 @@ import type {
   GetApiDatasetFilePathProps,
   GetApiDatasetFilePathResponse
 } from '@/pages/api/core/dataset/apiDataset/getpath';
+import { GetQuoteDataProps } from '@/pages/api/core/chat/quote/getQuote';
 /* ======================== dataset ======================= */
 export const getDatasets = (data: GetDatasetListBody) =>
   POST<DatasetListItemType[]>(`/core/dataset/list`, data);
@@ -223,8 +224,8 @@ export const delOneDatasetDataById = (id: string) =>
   DELETE<string>(`/core/dataset/data/delete`, { id });
 
 // Get quote data
-export const getQuoteData = (id: string) =>
-  GET<GetQuoteDataResponse>(`/core/dataset/data/getQuoteData`, { id });
+export const getQuoteData = (data: GetQuoteDataProps) =>
+  POST<GetQuoteDataResponse>(`/core/dataset/data/getQuoteData`, data);
 
 /* ================ training ==================== */
 export const postRebuildEmbedding = (data: rebuildEmbeddingBody) =>
