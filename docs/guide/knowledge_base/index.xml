@@ -39,7 +39,7 @@ API 文件库能够让用户轻松对接已有的文档库，只需要按照 Fas
 你需要提供两个参数：
 baseURL: 文件服务接口的 baseURL authorization: 用于身份验证的请求头信息，实际请求格式为 Authorization: Bearer &amp;lt;token&amp;gt; 接口规范 link接口响应格式：
 type ResponseType = { success: boolean; message: string; data: any; } 数据类型：
-// 文件列表中，单项的文件类型 type FileListItem = { id: string; parentId: string | null; name: string; type: &amp;#39;file&amp;#39; | &amp;#39;folder&amp;#39;; updateTime: Date; createTime: Date; } 1.</description></item><item><title>飞书知识库</title><link>https://doc.tryfastgpt.ai/docs/guide/knowledge_base/lark_dataset/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://doc.tryfastgpt.ai/docs/guide/knowledge_base/lark_dataset/</guid><description>FastGPT v4.8.16 版本开始，商业版用户支持飞书知识库导入，用户可以通过配置飞书应用的 appId 和 appSecret，并选中一个文档空间的顶层文件夹来导入飞书知识库。目前处于测试阶段，部分交互有待优化。
+// 文件列表中，单项的文件类型 type FileListItem = { id: string; parentId: string //也可能为 null 或者 undefined 类型; name: string; type: &amp;#39;file&amp;#39; | &amp;#39;folder&amp;#39;; updateTime: Date; createTime: Date; } 1.</description></item><item><title>飞书知识库</title><link>https://doc.tryfastgpt.ai/docs/guide/knowledge_base/lark_dataset/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://doc.tryfastgpt.ai/docs/guide/knowledge_base/lark_dataset/</guid><description>FastGPT v4.8.16 版本开始，商业版用户支持飞书知识库导入，用户可以通过配置飞书应用的 appId 和 appSecret，并选中一个文档空间的顶层文件夹来导入飞书知识库。目前处于测试阶段，部分交互有待优化。
 由于飞书限制，无法直接获取所有文档内容，目前仅可以获取共享空间下文件目录的内容，无法获取个人空间和知识库里的内容。
 1. 创建飞书应用 link打开 飞书开放平台，点击创建应用，选择自建应用，然后填写应用名称。
 2. 配置应用权限 link创建应用后，进入应用可以配置相关权限，这里需要增加3个权限：
