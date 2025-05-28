@@ -11,11 +11,19 @@ import { checkTimerLock } from '@fastgpt/service/common/system/timerLock/utils';
 import { TimerIdEnum } from '@fastgpt/service/common/system/timerLock/constants';
 import { addHours } from 'date-fns';
 import { getScheduleTriggerApp } from '@/service/core/app/utils';
+import { refreshFeishuToken } from '@fastgpt/service/core/dataset/feishuPrivateDataset/refreshToken';
 
 // Try to run train every minute
 const setTrainingQueueCron = () => {
   setCron('*/1 * * * *', () => {
     startTrainingQueue();
+  });
+};
+
+// Refresh feishu token every 110 minutes
+const setRefreshFeishuTokenCron = () => {
+  setCron('*/110 * * * *', () => {
+    refreshFeishuToken();
   });
 };
 
@@ -83,4 +91,5 @@ export const startCron = () => {
   setClearTmpUploadFilesCron();
   clearInvalidDataCron();
   scheduleTriggerAppCron();
+  setRefreshFeishuTokenCron();
 };
