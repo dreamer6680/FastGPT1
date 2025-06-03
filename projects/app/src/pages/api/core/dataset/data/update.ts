@@ -9,7 +9,7 @@ import { addOperationLog } from '@fastgpt/service/support/operationLog/addOperat
 import { OperationLogEventEnum } from '@fastgpt/global/support/operationLog/constants';
 import { getI18nDatasetType } from '@fastgpt/service/support/operationLog/util';
 async function handler(req: ApiRequestProps<UpdateDatasetDataProps>) {
-  const { dataId, q, a, indexes = [] } = req.body;
+  const { dataId, q, a, indexes = [], imageId } = req.body;
 
   // auth data permission
   const {
