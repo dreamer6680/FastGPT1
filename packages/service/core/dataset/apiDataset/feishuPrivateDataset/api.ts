@@ -3,7 +3,7 @@ import type {
   ApiFileReadContentResponse,
   ApiDatasetDetailResponse,
   FeishuPrivateServer
-} from '@fastgpt/global/core/dataset/apiDataset';
+} from '@fastgpt/global/core/dataset/apiDataset/type';
 import { type ParentIdType } from '@fastgpt/global/common/parentFolder/type';
 import axios, { type Method } from 'axios';
 import { addLog } from '../../../../common/system/log';

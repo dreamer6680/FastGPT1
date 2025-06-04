@@ -180,9 +180,24 @@ const Dataset = () => {
                                   ? [
                                       {
                                         icon: 'core/dataset/feishuDatasetColor',
-                                        label: t('dataset:feishu_dataset'),
-                                        description: t('dataset:feishu_dataset_desc'),
-                                        onClick: () => onSelectDatasetType(DatasetTypeEnum.feishu)
+                                        label: t('dataset:feishu_share_dataset'),
+                                        description: t('dataset:feishu_share_dataset_desc'),
+                                        onClick: () =>
+                                          onSelectDatasetType(DatasetTypeEnum.feishuShare)
+                                      },
+                                      {
+                                        icon: 'core/dataset/feishuDatasetColor',
+                                        label: t('dataset:feishu_knowledge_dataset'),
+                                        description: t('dataset:feishu_knowledge_dataset_desc'),
+                                        onClick: () =>
+                                          onSelectDatasetType(DatasetTypeEnum.feishuKnowledge)
+                                      },
+                                      {
+                                        icon: 'core/dataset/feishuDatasetColor',
+                                        label: t('dataset:feishu_private_dataset'),
+                                        description: t('dataset:feishu_private_dataset_desc'),
+                                        onClick: () =>
+                                          onSelectDatasetType(DatasetTypeEnum.feishuPrivate)
                                       }
                                     ]
                                   : []),

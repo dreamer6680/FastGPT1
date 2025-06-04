@@ -16,7 +16,9 @@ import type { DatasetPermission } from '../../support/permission/dataset/control
 import type {
   ApiDatasetServerType,
   APIFileServer,
-  FeishuServer,
+  FeishuShareServer,
+  FeishuKnowledgeServer,
+  FeishuPrivateServer,
   YuqueServer
 } from './apiDataset/type';
 import type { SourceMemberType } from 'support/user/type';
@@ -86,7 +88,12 @@ export type DatasetSchemaType = {
   externalReadUrl?: string;
   defaultPermission?: number;
   apiServer?: APIFileServer;
-  feishuServer?: FeishuServer;
+  feishuServer?: {
+    appid: string;
+  };
+  feishuShareServer?: FeishuShareServer;
+  feishuKnowledgeServer?: FeishuKnowledgeServer;
+  feishuPrivateServer?: FeishuPrivateServer;
   yuqueServer?: YuqueServer;
 };
 

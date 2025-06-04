@@ -45,8 +45,10 @@ export type YuqueServer = {
 
 export type ApiDatasetServerType = {
   apiServer?: APIFileServer;
-  feishuServer?: FeishuServer;
   yuqueServer?: YuqueServer;
+  feishuShareServer?: FeishuShareServer;
+  feishuKnowledgeServer?: FeishuKnowledgeServer;
+  feishuPrivateServer?: FeishuPrivateServer;
 };
 
 // Api dataset api

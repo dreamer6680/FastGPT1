@@ -135,7 +135,6 @@ const DatasetSchema = new Schema({
   externalReadUrl: String,
   defaultPermission: Number,
   apiServer: Object,
-  feishuServer: Object,
   yuqueServer: Object
 });
 

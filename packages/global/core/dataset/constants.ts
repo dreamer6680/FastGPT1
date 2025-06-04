@@ -11,7 +11,10 @@ export enum DatasetTypeEnum {
   feishuShare = 'feishuShare',
   feishuKnowledge = 'feishuKnowledge',
   feishuPrivate = 'feishuPrivate',
-  yuque = 'yuque'
+  yuque = 'yuque',
+
+  // abondoned
+  feishu = 'feishu' // feishu -> feishuShare
 }
 
 // @ts-ignore
@@ -32,10 +35,24 @@ export const ApiDatasetTypeMap: Record<
     collectionLabel: i18nT('common:File'),
     courseUrl: '/docs/guide/knowledge_base/api_dataset/'
   },
-  [DatasetTypeEnum.feishu]: {
+  [DatasetTypeEnum.feishuShare]: {
     icon: 'core/dataset/feishuDatasetOutline',
     avatar: 'core/dataset/feishuDatasetColor',
-    label: i18nT('dataset:feishu_dataset'),
+    label: i18nT('dataset:feishu_share_dataset'),
+    collectionLabel: i18nT('common:File'),
+    courseUrl: '/docs/guide/knowledge_base/lark_dataset/'
+  },
+  [DatasetTypeEnum.feishuKnowledge]: {
+    icon: 'core/dataset/feishuKnowledgeDatasetOutline',
+    avatar: 'core/dataset/feishuKnowledgeDatasetColor',
+    label: i18nT('dataset:feishu_knowledge_dataset'),
+    collectionLabel: i18nT('common:File'),
+    courseUrl: '/docs/guide/knowledge_base/lark_dataset/'
+  },
+  [DatasetTypeEnum.feishuPrivate]: {
+    icon: 'core/dataset/feishuPrivateDatasetOutline',
+    avatar: 'core/dataset/feishuPrivateDatasetColor',
+    label: i18nT('dataset:feishu_private_dataset'),
     collectionLabel: i18nT('common:File'),
     courseUrl: '/docs/guide/knowledge_base/lark_dataset/'
   },

@@ -1,6 +1,6 @@
 import type {
   ApiDatasetDetailResponse,
-  FeishuServer,
+  FeishuShareServer,
   YuqueServer
 } from '@fastgpt/global/core/dataset/apiDataset/type';
 import type {

@@ -18,9 +18,9 @@ export async function refreshFeishuToken() {
     const refreshPromises = datasets
       .filter(
         (dataset) =>
-          (dataset.type === 'feishuPrivate' && dataset.feishuPrivateServer) ||
-          (dataset.type === 'feishuShare' && dataset.feishuShareServer) ||
-          (dataset.type === 'feishuKnowledge' && dataset.feishuKnowledgeServer)
+          (dataset.type === 'feishuPrivate' && dataset.apiDatasetServer?.feishuPrivateServer) ||
+          (dataset.type === 'feishuShare' && dataset.apiDatasetServer?.feishuShareServer) ||
+          (dataset.type === 'feishuKnowledge' && dataset.apiDatasetServer?.feishuKnowledgeServer)
       )
       .map(async (dataset) => {
         try {

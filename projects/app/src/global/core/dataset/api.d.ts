@@ -4,7 +4,9 @@ import type {
 } from '@fastgpt/global/core/dataset/api';
 import type {
   APIFileServer,
-  FeishuServer,
+  FeishuShareServer,
+  FeishuKnowledgeServer,
+  FeishuPrivateServer,
   YuqueServer
 } from '@fastgpt/global/core/dataset/apiDataset/type';
 import type {

@@ -3,7 +3,8 @@ import type { ApiDatasetServerType } from './type';
 export const filterApiDatasetServerPublicData = (apiDatasetServer?: ApiDatasetServerType) => {
   if (!apiDatasetServer) return undefined;
 
-  const { apiServer, yuqueServer, feishuServer } = apiDatasetServer;
+  const { apiServer, yuqueServer, feishuShareServer, feishuKnowledgeServer, feishuPrivateServer } =
+    apiDatasetServer;
 
   return {
     apiServer: apiServer
@@ -20,11 +21,28 @@ export const filterApiDatasetServerPublicData = (apiDatasetServer?: ApiDatasetSe
           basePath: yuqueServer.basePath
         }
       : undefined,
-    feishuServer: feishuServer
+    feishuShareServer: feishuShareServer
       ? {
-          appId: feishuServer.appId,
-          appSecret: '',
-          folderToken: feishuServer.folderToken
+          user_access_token: feishuShareServer.user_access_token,
+          refresh_token: '',
+          outdate_time: 0,
+          folderToken: feishuShareServer.folderToken
+        }
+      : undefined,
+    feishuKnowledgeServer: feishuKnowledgeServer
+      ? {
+          user_access_token: feishuKnowledgeServer.user_access_token,
+          refresh_token: '',
+          outdate_time: 0,
+          basePath: feishuKnowledgeServer.basePath
+        }
+      : undefined,
+    feishuPrivateServer: feishuPrivateServer
+      ? {
+          user_access_token: feishuPrivateServer.user_access_token,
+          refresh_token: '',
+          outdate_time: 0,
+          basePath: feishuPrivateServer.basePath
         }
       : undefined
   };
