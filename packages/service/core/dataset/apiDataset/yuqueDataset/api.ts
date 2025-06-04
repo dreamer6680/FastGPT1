@@ -3,7 +3,7 @@ import type {
   ApiFileReadContentResponse,
   YuqueServer,
   ApiDatasetDetailResponse
-} from '@fastgpt/global/core/dataset/apiDataset';
+} from '@fastgpt/global/core/dataset/apiDataset/type';
 import axios, { type Method } from 'axios';
 import { addLog } from '../../../../common/system/log';
 import { type ParentIdType } from '@fastgpt/global/common/parentFolder/type';
@@ -105,7 +105,6 @@ export const useYuqueDatasetRequest = ({ yuqueServer }: { yuqueServer: YuqueServ
     if (!parentId) {
       if (yuqueServer.basePath) parentId = yuqueServer.basePath;
     }
-
     let files: APIFileItem[] = [];
 
     if (!parentId) {

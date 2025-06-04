@@ -18,6 +18,7 @@ import { useSystemStore } from '@/web/common/system/useSystemStore';
 import { type ParentTreePathItemType } from '@fastgpt/global/common/parentFolder/type';
 import { useRequest2 } from '@fastgpt/web/hooks/useRequest';
 import { getWebLLMModel } from '@/web/common/system/utils';
+import { filterApiDatasetServerPublicData } from '@fastgpt/global/core/dataset/apiDataset/utils';
 
 type DatasetPageContextType = {
   datasetId: string;
@@ -103,44 +104,7 @@ export const DatasetPageContextProvider = ({
         ...data,
         agentModel: data.agentModel ? getWebLLMModel(data.agentModel) : state.agentModel,
         vlmModel: data.vlmModel ? getWebLLMModel(data.vlmModel) : state.vlmModel,
-        apiServer: data.apiServer
-          ? {
-              baseUrl: data.apiServer.baseUrl,
-              authorization: '',
-              basePath: data.apiServer.basePath
-            }
-          : state.apiServer,
-        yuqueServer: data.yuqueServer
-          ? {
-              userId: data.yuqueServer.userId,
-              token: '',
-              basePath: data.yuqueServer.basePath
-            }
-          : state.yuqueServer,
-        feishuShareServer: data.feishuShareServer
-          ? {
-              user_access_token: data.feishuShareServer.user_access_token,
-              refresh_token: data.feishuShareServer.refresh_token,
-              outdate_time: data.feishuShareServer.outdate_time,
-              folderToken: data.feishuShareServer.folderToken
-            }
-          : state.feishuShareServer,
-        feishuKnowledgeServer: data.feishuKnowledgeServer
-          ? {
-              user_access_token: data.feishuKnowledgeServer.user_access_token,
-              refresh_token: data.feishuKnowledgeServer.refresh_token,
-              outdate_time: data.feishuKnowledgeServer.outdate_time,
-              basePath: data.feishuKnowledgeServer.basePath
-            }
-          : state.feishuKnowledgeServer,
-        feishuPrivateServer: data.feishuPrivateServer
-          ? {
-              user_access_token: data.feishuPrivateServer.user_access_token,
-              refresh_token: data.feishuPrivateServer.refresh_token,
-              outdate_time: data.feishuPrivateServer.outdate_time,
-              basePath: data.feishuPrivateServer.basePath
-            }
-          : state.feishuPrivateServer
+        apiDatasetServer: filterApiDatasetServerPublicData(data.apiDatasetServer)
       }));
     }
   };

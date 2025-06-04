@@ -378,12 +378,12 @@ const Info = ({ datasetId }: { datasetId: string }) => {
                   onClick={() =>
                     setEditedAPIDataset({
                       id: datasetDetail._id,
-                      apiServer: datasetDetail.apiServer
+                      apiDatasetServer: datasetDetail.apiDatasetServer
                     })
                   }
                 />
               </Flex>
-              <Box fontSize={'mini'}>{datasetDetail.apiServer?.baseUrl}</Box>
+              <Box fontSize={'mini'}>{datasetDetail.apiDatasetServer?.apiServer?.baseUrl}</Box>
             </Box>
           </>
         )}
@@ -403,70 +403,17 @@ const Info = ({ datasetId }: { datasetId: string }) => {
                   onClick={() =>
                     setEditedAPIDataset({
                       id: datasetDetail._id,
-                      yuqueServer: datasetDetail.yuqueServer
+                      apiDatasetServer: datasetDetail.apiDatasetServer
                     })
                   }
                 />
               </Flex>
-              <Box fontSize={'mini'}>{datasetDetail.yuqueServer?.userId}</Box>
-            </Box>
-          </>
-        )}
-        {datasetDetail.type === DatasetTypeEnum.feishuKnowledge && (
-          <>
-            <Box w={'100%'} alignItems={'center'} pt={4}>
-              <Flex justifyContent={'space-between'} mb={1}>
-                <FormLabel fontSize={'mini'} fontWeight={'500'}>
-                  {t('dataset:feishu_knowledge_dataset_config')}
-                </FormLabel>
-                <MyIcon
-                  name={'edit'}
-                  w={'14px'}
-                  _hover={{ color: 'primary.600' }}
-                  cursor={'pointer'}
-                  onClick={() =>
-                    setEditedAPIDataset({
-                      id: datasetDetail._id,
-                      feishuKnowledgeServer: datasetDetail.feishuKnowledgeServer
-                    })
-                  }
-                />
-              </Flex>
-              <Box fontSize={'mini'}>
-                {datasetDetail.feishuKnowledgeServer?.basePath || t('common:root_folder')}
-              </Box>
+              <Box fontSize={'mini'}>{datasetDetail.apiDatasetServer?.yuqueServer?.userId}</Box>
             </Box>
           </>
         )}
 
-        {datasetDetail.type === DatasetTypeEnum.feishuPrivate && (
-          <>
-            <Box w={'100%'} alignItems={'center'} pt={4}>
-              <Flex justifyContent={'space-between'} mb={1}>
-                <FormLabel fontSize={'mini'} fontWeight={'500'}>
-                  {t('dataset:feishu_private_dataset_config')}
-                </FormLabel>
-                <MyIcon
-                  name={'edit'}
-                  w={'14px'}
-                  _hover={{ color: 'primary.600' }}
-                  cursor={'pointer'}
-                  onClick={() =>
-                    setEditedAPIDataset({
-                      id: datasetDetail._id,
-                      feishuPrivateServer: datasetDetail.feishuPrivateServer
-                    })
-                  }
-                />
-              </Flex>
-              <Box fontSize={'mini'}>
-                {datasetDetail.feishuPrivateServer?.basePath || t('common:root_folder')}
-              </Box>
-            </Box>
-          </>
-        )}
-
-        {datasetDetail.type === DatasetTypeEnum.feishuShare && (
+        {datasetDetail.type === DatasetTypeEnum.feishu && (
           <>
             <Box w={'100%'} alignItems={'center'} pt={4}>
               <Flex justifyContent={'space-between'} mb={1}>
@@ -481,13 +428,13 @@ const Info = ({ datasetId }: { datasetId: string }) => {
                   onClick={() =>
                     setEditedAPIDataset({
                       id: datasetDetail._id,
-                      feishuShareServer: datasetDetail.feishuShareServer
+                      apiDatasetServer: datasetDetail.apiDatasetServer
                     })
                   }
                 />
               </Flex>
               <Box fontSize={'mini'}>
-                {datasetDetail.feishuShareServer?.folderToken || t('dataset:not_set')}
+                {datasetDetail.apiDatasetServer?.feishuServer?.folderToken}
               </Box>
             </Box>
           </>
@@ -559,11 +506,7 @@ const Info = ({ datasetId }: { datasetId: string }) => {
           onEdit={(data) =>
             updateDataset({
               id: datasetId,
-              apiServer: data.apiServer,
-              yuqueServer: data.yuqueServer,
-              feishuShareServer: data.feishuShareServer,
-              feishuKnowledgeServer: data.feishuKnowledgeServer,
-              feishuPrivateServer: data.feishuPrivateServer
+              apiDatasetServer: data.apiDatasetServer
             })
           }
         />

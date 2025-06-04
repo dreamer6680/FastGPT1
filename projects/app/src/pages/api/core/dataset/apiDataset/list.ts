@@ -23,21 +23,7 @@ async function handler(req: NextApiRequest) {
     per: ReadPermissionVal
   });
 
-  const apiServer = dataset.apiServer;
-  const feishuShareServer = dataset.feishuShareServer;
-  const yuqueServer = dataset.yuqueServer;
-  const feishuKnowledgeServer = dataset.feishuKnowledgeServer;
-  const feishuPrivateServer = dataset.feishuPrivateServer;
-
-  return (
-    await getApiDatasetRequest({
-      apiServer,
-      yuqueServer,
-      feishuShareServer,
-      feishuKnowledgeServer,
-      feishuPrivateServer
-    })
-  ).listFiles({ searchKey, parentId });
+  return (await getApiDatasetRequest(dataset.apiDatasetServer)).listFiles({ searchKey, parentId });
 }
 
 export default NextAPI(handler);

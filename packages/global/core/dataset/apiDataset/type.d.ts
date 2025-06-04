@@ -1,5 +1,5 @@
-import { RequireOnlyOne } from '../../common/type/utils';
-import type { ParentIdType } from '../../common/parentFolder/type.d';
+import { RequireOnlyOne } from '../../../common/type/utils';
+import type { ParentIdType } from '../../../common/parentFolder/type';
 
 export type APIFileItem = {
   id: string;
@@ -41,6 +41,12 @@ export type YuqueServer = {
   userId: string;
   token?: string;
   basePath?: string;
+};
+
+export type ApiDatasetServerType = {
+  apiServer?: APIFileServer;
+  feishuServer?: FeishuServer;
+  yuqueServer?: YuqueServer;
 };
 
 // Api dataset api

@@ -3,13 +3,6 @@ import { DatasetTypeEnum } from '@fastgpt/global/core/dataset/constants';
 import { Flex, Input, Button, ModalBody, ModalFooter, Box } from '@chakra-ui/react';
 import type { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'next-i18next';
-import type {
-  APIFileServer,
-  FeishuShareServer,
-  FeishuKnowledgeServer,
-  FeishuPrivateServer,
-  YuqueServer
-} from '@fastgpt/global/core/dataset/apiDataset';
 import { getApiDatasetPaths, getApiDatasetCatalog } from '@/web/core/dataset/api';
 import type {
   GetResourceFolderListItemResponse,
@@ -25,6 +18,7 @@ import FormLabel from '@fastgpt/web/components/common/MyBox/FormLabel';
 import MyModal from '@fastgpt/web/components/common/MyModal';
 import MyIcon from '@fastgpt/web/components/common/Icon';
 import { FolderIcon } from '@fastgpt/global/common/file/image/constants';
+import type { ApiDatasetServerType } from '@fastgpt/global/core/dataset/apiDataset/type';
 
 const ApiDatasetForm = ({
   type,
@@ -35,11 +29,7 @@ const ApiDatasetForm = ({
   datasetId?: string;
   form: UseFormReturn<
     {
-      apiServer?: APIFileServer;
-      feishuShareServer?: FeishuShareServer;
-      feishuKnowledgeServer?: FeishuKnowledgeServer;
-      feishuPrivateServer?: FeishuPrivateServer;
-      yuqueServer?: YuqueServer;
+      apiDatasetServer?: ApiDatasetServerType;
     },
     any
   >;
@@ -47,11 +37,10 @@ const ApiDatasetForm = ({
   const { t } = useTranslation();
   const { register, setValue, watch } = form;
 
-  const yuqueServer = watch('yuqueServer');
-  const feishuShareServer = watch('feishuShareServer');
-  const apiServer = watch('apiServer');
-  const feishuKnowledgeServer = watch('feishuKnowledgeServer');
-  const feishuPrivateServer = watch('feishuPrivateServer');
+  const apiDatasetServer = watch('apiDatasetServer');
+  const yuqueServer = apiDatasetServer?.yuqueServer;
+  const feishuServer = apiDatasetServer?.feishuServer;
+  const apiServer = apiDatasetServer?.apiServer;
 
   const [pathNames, setPathNames] = useState(t('dataset:rootdirectory'));
   const [
@@ -170,11 +159,7 @@ const ApiDatasetForm = ({
       const path = await getApiDatasetPaths({
         datasetId,
         parentId,
-        yuqueServer,
-        feishuShareServer,
-        apiServer,
-        feishuKnowledgeServer,
-        feishuPrivateServer
+        apiDatasetServer
       });
       setPathNames(path);
     },
@@ -189,19 +174,13 @@ const ApiDatasetForm = ({
     const value = id === 'root' || id === null || id === undefined ? '' : id;
     switch (type) {
       case DatasetTypeEnum.yuque:
-        setValue('yuqueServer.basePath', value);
+        setValue('apiDatasetServer.yuqueServer.basePath', value);
         break;
-      case DatasetTypeEnum.feishuShare:
-        setValue('feishuShareServer.folderToken', value);
+      case DatasetTypeEnum.feishu:
+        setValue('apiDatasetServer.feishuServer.folderToken', value);
         break;
       case DatasetTypeEnum.apiDataset:
-        setValue('apiServer.basePath', value);
-        break;
-      case DatasetTypeEnum.feishuKnowledge:
-        setValue('feishuKnowledgeServer.basePath', value);
-        break;
-      case DatasetTypeEnum.feishuPrivate:
-        setValue('feishuPrivateServer.basePath', value);
+        setValue('apiDatasetServer.apiServer.basePath', value);
         break;
     }
 
@@ -234,48 +213,10 @@ const ApiDatasetForm = ({
       <BaseUrlSelector
         selectId={yuqueServer?.basePath || apiServer?.basePath || 'root'}
         server={async (e: GetResourceFolderListProps) => {
-          const params: GetApiDatasetCataLogProps = { parentId: e.parentId };
-
-          switch (type) {
-            case DatasetTypeEnum.yuque:
-              params.yuqueServer = {
-                userId: yuqueServer?.userId || '',
-                token: yuqueServer?.token || '',
-                basePath: ''
-              };
-              break;
-            case DatasetTypeEnum.feishuShare:
-              params.feishuShareServer = {
-                user_access_token: feishuShareServer?.user_access_token || '',
-                refresh_token: feishuShareServer?.refresh_token || '',
-                outdate_time: feishuShareServer?.outdate_time || 0,
-                folderToken: feishuShareServer?.folderToken || ''
-              };
-              break;
-            case DatasetTypeEnum.feishuKnowledge:
-              params.feishuKnowledgeServer = {
-                user_access_token: feishuKnowledgeServer?.user_access_token || '',
-                refresh_token: feishuKnowledgeServer?.refresh_token || '',
-                outdate_time: feishuKnowledgeServer?.outdate_time || 0,
-                basePath: ''
-              };
-              break;
-            case DatasetTypeEnum.feishuPrivate:
-              params.feishuPrivateServer = {
-                user_access_token: feishuPrivateServer?.user_access_token || '',
-                refresh_token: feishuPrivateServer?.refresh_token || '',
-                outdate_time: feishuPrivateServer?.outdate_time || 0,
-                basePath: ''
-              };
-              break;
-            case DatasetTypeEnum.apiDataset:
-              params.apiServer = {
-                baseUrl: apiServer?.baseUrl || '',
-                authorization: apiServer?.authorization || '',
-                basePath: ''
-              };
-              break;
-          }
+          const params: GetApiDatasetCataLogProps = {
+            parentId: e.parentId,
+            apiDatasetServer
+          };
 
           return getApiDatasetCatalog(params);
         }}
@@ -296,7 +237,7 @@ const ApiDatasetForm = ({
               bg={'myWhite.600'}
               placeholder={t('dataset:api_url')}
               maxLength={200}
-              {...register('apiServer.baseUrl', { required: true })}
+              {...register('apiDatasetServer.apiServer.baseUrl', { required: true })}
             />
           </Flex>
           <Flex mt={6} alignItems={'center'}>
@@ -307,16 +248,70 @@ const ApiDatasetForm = ({
               bg={'myWhite.600'}
               placeholder={t('dataset:request_headers')}
               maxLength={2000}
-              {...register('apiServer.authorization')}
+              {...register('apiDatasetServer.apiServer.authorization')}
             />
           </Flex>
           {renderBaseUrlSelector()}
           {renderDirectoryModal()}
         </>
       )}
-      {type === DatasetTypeEnum.feishuShare && <>{renderFeishuAuth(feishuShareServer)}</>}
-      {type === DatasetTypeEnum.feishuKnowledge && <>{renderFeishuAuth(feishuKnowledgeServer)}</>}
-      {type === DatasetTypeEnum.feishuPrivate && <>{renderFeishuAuth(feishuPrivateServer)}</>}
+      {type === DatasetTypeEnum.feishu && (
+        <>
+          <Flex mt={6}>
+            <Flex
+              alignItems={'center'}
+              flex={['', '0 0 110px']}
+              color={'myGray.900'}
+              fontWeight={500}
+              fontSize={'sm'}
+            >
+              App ID
+            </Flex>
+            <Input
+              bg={'myWhite.600'}
+              placeholder={'App ID'}
+              maxLength={200}
+              {...register('apiDatasetServer.feishuServer.appId', { required: true })}
+            />
+          </Flex>
+          <Flex mt={6}>
+            <Flex
+              alignItems={'center'}
+              flex={['', '0 0 110px']}
+              color={'myGray.900'}
+              fontWeight={500}
+              fontSize={'sm'}
+            >
+              App Secret
+            </Flex>
+            <Input
+              bg={'myWhite.600'}
+              placeholder={'App Secret'}
+              maxLength={200}
+              {...register('apiDatasetServer.feishuServer.appSecret', { required: true })}
+            />
+          </Flex>
+          <Flex mt={6}>
+            <Flex
+              alignItems={'center'}
+              flex={['', '0 0 110px']}
+              color={'myGray.900'}
+              fontWeight={500}
+              fontSize={'sm'}
+            >
+              Folder Token
+            </Flex>
+            <Input
+              bg={'myWhite.600'}
+              placeholder={'Folder Token'}
+              maxLength={200}
+              {...register('apiDatasetServer.feishuServer.folderToken', { required: true })}
+            />
+          </Flex>
+          {/* {renderBaseUrlSelector()}
+          {renderDirectoryModal()} */}
+        </>
+      )}
       {type === DatasetTypeEnum.yuque && (
         <>
           <Flex mt={6} alignItems={'center'}>
@@ -327,7 +322,7 @@ const ApiDatasetForm = ({
               bg={'myWhite.600'}
               placeholder={'User ID'}
               maxLength={200}
-              {...register('yuqueServer.userId', { required: true })}
+              {...register('apiDatasetServer.yuqueServer.userId', { required: true })}
             />
           </Flex>
           <Flex mt={6} alignItems={'center'}>
@@ -338,7 +333,7 @@ const ApiDatasetForm = ({
               bg={'myWhite.600'}
               placeholder={'Token'}
               maxLength={200}
-              {...register('yuqueServer.token', { required: true })}
+              {...register('apiDatasetServer.yuqueServer.token', { required: true })}
             />
           </Flex>
           {renderBaseUrlSelector()}

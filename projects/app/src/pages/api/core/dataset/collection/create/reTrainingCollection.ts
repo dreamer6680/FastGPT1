@@ -14,6 +14,9 @@ import { authDatasetCollection } from '@fastgpt/service/support/permission/datas
 import { CommonErrEnum } from '@fastgpt/global/common/error/code/common';
 import { i18nT } from '@fastgpt/web/i18n/utils';
 import { WritePermissionVal } from '@fastgpt/global/support/permission/constant';
+import { addOperationLog } from '@fastgpt/service/support/operationLog/addOperationLog';
+import { OperationLogEventEnum } from '@fastgpt/global/support/operationLog/constants';
+import { getI18nDatasetType } from '@fastgpt/service/support/operationLog/util';
 
 type RetrainingCollectionResponse = {
   collectionId: string;
@@ -59,11 +62,7 @@ async function handler(
       return {
         type: DatasetSourceReadTypeEnum.apiFile,
         sourceId: collection.apiFileId,
-        apiServer: collection.dataset.apiServer,
-        feishuShareServer: collection.dataset.feishuShareServer,
-        feishuKnowledgeServer: collection.dataset.feishuKnowledgeServer,
-        feishuPrivateServer: collection.dataset.feishuPrivateServer,
-        yuqueServer: collection.dataset.yuqueServer
+        apiDatasetServer: collection.dataset.apiDatasetServer
       };
     }
     if (collection.type === DatasetCollectionTypeEnum.externalFile) {
@@ -125,6 +124,19 @@ async function handler(
         metadata: collection.metadata
       }
     });
+
+    (async () => {
+      addOperationLog({
+        tmbId,
+        teamId,
+        event: OperationLogEventEnum.RETRAIN_COLLECTION,
+        params: {
+          collectionName: collection.name,
+          datasetName: collection.dataset?.name || '',
+          datasetType: getI18nDatasetType(collection.dataset?.type || '')
+        }
+      });
+    })();
 
     return { collectionId };
   });
