@@ -14,5 +14,5 @@ export const checkPasswordRule = (password: string) => {
   const matchCount = patterns.filter((pattern) => pattern.test(password)).length;
 
   // Must satisfy at least 2 patterns
-  return matchCount >= 2;
+  return matchCount >= 3;
 };
