@@ -1,19 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Flex,
-  type FlexProps,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Button,
-  ModalFooter
-} from '@chakra-ui/react';
+import { Box, Flex, type FlexProps } from '@chakra-ui/react';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { getErrText } from '@fastgpt/global/common/error/utils';
 import dynamic from 'next/dynamic';

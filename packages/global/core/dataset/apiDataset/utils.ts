@@ -26,7 +26,9 @@ export const filterApiDatasetServerPublicData = (apiDatasetServer?: ApiDatasetSe
           user_access_token: feishuShareServer.user_access_token,
           refresh_token: '',
           outdate_time: 0,
-          folderToken: feishuShareServer.folderToken
+          folderToken: feishuShareServer.folderToken,
+          appId: feishuShareServer.appId,
+          appSecret: feishuShareServer.appSecret
         }
       : undefined,
     feishuKnowledgeServer: feishuKnowledgeServer

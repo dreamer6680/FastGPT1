@@ -21,6 +21,8 @@ export type FeishuShareServer = {
   user_access_token: string;
   refresh_token: string;
   outdate_time: number;
+  appId: string;
+  appSecret: string;
   folderToken: string;
 };
 export type FeishuKnowledgeServer = {

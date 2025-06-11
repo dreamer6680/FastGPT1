@@ -54,7 +54,7 @@ export async function getUserAccessToken(code: string, datasetId: string) {
 
     await MongoDataset.findByIdAndUpdate(datasetId, {
       $set: {
-        [`${dataset.type}Server`]: {
+        [`apiDatasetServer.${dataset.type}Server`]: {
           user_access_token: response.data.access_token,
           refresh_token: response.data.refresh_token,
           outdate_time: Date.now() + response.data.expires_in * 1000

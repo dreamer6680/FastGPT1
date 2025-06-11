@@ -36,8 +36,8 @@ export const ApiDatasetTypeMap: Record<
     courseUrl: '/docs/guide/knowledge_base/api_dataset/'
   },
   [DatasetTypeEnum.feishuShare]: {
-    icon: 'core/dataset/feishuDatasetOutline',
-    avatar: 'core/dataset/feishuDatasetColor',
+    icon: 'core/dataset/feishuShareDatasetOutline',
+    avatar: 'core/dataset/feishuShareDatasetColor',
     label: i18nT('dataset:feishu_share_dataset'),
     collectionLabel: i18nT('common:File'),
     courseUrl: '/docs/guide/knowledge_base/lark_dataset/'

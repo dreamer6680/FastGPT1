@@ -61,6 +61,52 @@ const ApiDatasetForm = ({
     feishuKnowledgeServer?.basePath ||
     feishuPrivateServer?.basePath;
 
+  const renderFeishuShareForm = () => {
+    return (
+      <>
+        <Flex mt={6}>
+          <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
+            App ID
+          </FormLabel>
+          <Input
+            bg={'myWhite.600'}
+            placeholder={'App ID'}
+            maxLength={200}
+            {...register('apiDatasetServer.feishuShareServer.appId', {
+              required: true
+            })}
+          />
+        </Flex>
+        <Flex mt={6}>
+          <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
+            App Secret
+          </FormLabel>
+          <Input
+            bg={'myWhite.600'}
+            placeholder={'App Secret'}
+            maxLength={200}
+            {...register('apiDatasetServer.feishuShareServer.appSecret', {
+              required: true
+            })}
+          />
+        </Flex>
+        <Flex mt={6}>
+          <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
+            Folder Token
+          </FormLabel>
+          <Input
+            bg={'myWhite.600'}
+            placeholder={'Folder Token'}
+            maxLength={200}
+            {...register('apiDatasetServer.feishuShareServer.folderToken', {
+              required: true
+            })}
+          />
+        </Flex>
+      </>
+    );
+  };
+
   const renderFeishuAuth = (
     server:
       | ApiDatasetServerType['feishuShareServer']
@@ -71,52 +117,66 @@ const ApiDatasetForm = ({
     if (urlParams.get('datasetId')) {
       return (
         <>
-          <Flex mt={6} alignItems={'center'}>
-            <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
-              Feishu Auth
-            </FormLabel>
-            <MyBox py={1} fontSize={'sm'} flex={'1 0 0'} overflow="auto">
-              {!server?.user_access_token ? t('dataset:have_not_auth') : t('dataset:have_auth')}
-            </MyBox>
-            <Button
-              type="button"
-              onClick={() => {
-                const url = `https://open.feishu.cn/open-apis/authen/v1/authorize?app_id=${appid}&redirect_uri=${window.location.origin}/api/core/dataset/feishu/oauth&scope=drive:drive.metadata:readonly%20drive:drive:readonly%20docx:document:readonly%20wiki:wiki:readonly%20offline_access&state=${encodeURIComponent(
-                  JSON.stringify({
-                    returnUrl: window.location.pathname + window.location.search,
-                    datasetId: datasetId
-                  })
-                )}`;
-                window.location.href = url;
-              }}
-              ml={2}
-              variant={'whiteBase'}
-            >
-              {!server?.user_access_token
-                ? t('dataset:feishu_auth_button')
-                : t('dataset:feishu_change_auth_button')}
-            </Button>
-          </Flex>
-          {type === DatasetTypeEnum.feishuShare ? (
-            <Flex mt={6}>
-              <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
-                Folder Token
-              </FormLabel>
-              <Input
-                bg={'myWhite.600'}
-                placeholder={'Folder Token'}
-                maxLength={200}
-                {...register('apiDatasetServer.feishuShareServer.folderToken', { required: true })}
-              />
-            </Flex>
-          ) : (
+          {appid ? (
             <>
-              {renderBaseUrlSelector()}
-              {renderDirectoryModal()}
+              <Flex mt={6} alignItems={'center'}>
+                <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
+                  Feishu Auth
+                </FormLabel>
+                <MyBox py={1} fontSize={'sm'} flex={'1 0 0'} overflow="auto">
+                  {!server?.user_access_token ? t('dataset:have_not_auth') : t('dataset:have_auth')}
+                </MyBox>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    const url = `https://open.feishu.cn/open-apis/authen/v1/authorize?app_id=${appid}&redirect_uri=${window.location.origin}/api/core/dataset/feishu/oauth&scope=drive:drive.metadata:readonly%20drive:drive:readonly%20docx:document:readonly%20wiki:wiki:readonly%20offline_access&state=${encodeURIComponent(
+                      JSON.stringify({
+                        returnUrl: window.location.pathname + window.location.search,
+                        datasetId: datasetId
+                      })
+                    )}`;
+                    window.location.href = url;
+                  }}
+                  ml={2}
+                  variant={'whiteBase'}
+                >
+                  {!server?.user_access_token
+                    ? t('dataset:feishu_auth_button')
+                    : t('dataset:feishu_change_auth_button')}
+                </Button>
+              </Flex>
+              {type === DatasetTypeEnum.feishuShare ? (
+                <>
+                  <Flex mt={6}>
+                    <FormLabel flex={['', '0 0 110px']} fontSize={'sm'} required>
+                      Folder Token
+                    </FormLabel>
+                    <Input
+                      bg={'myWhite.600'}
+                      placeholder={'Folder Token'}
+                      maxLength={200}
+                      {...register('apiDatasetServer.feishuShareServer.folderToken', {
+                        required: true
+                      })}
+                    />
+                  </Flex>
+                </>
+              ) : (
+                <>
+                  {renderBaseUrlSelector()}
+                  {renderDirectoryModal()}
+                </>
+              )}
             </>
+          ) : type === DatasetTypeEnum.feishuShare ? (
+            renderFeishuShareForm()
+          ) : (
+            <></>
           )}
         </>
       );
+    } else if (type === DatasetTypeEnum.feishuShare && !appid) {
+      return renderFeishuShareForm();
     }
     return <></>;
   };

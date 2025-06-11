@@ -196,7 +196,6 @@ async function handler(
       };
       return flattenObjectWithConditions(apiDatasetServer);
     })();
-
     await MongoDataset.findByIdAndUpdate(
       id,
       {

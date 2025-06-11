@@ -48,7 +48,19 @@ export const useFeishuShareDatasetRequest = ({
   // 添加请求拦截器
   instance.interceptors.request.use(async (config) => {
     if (!config.headers.Authorization) {
-      config.headers['Authorization'] = `Bearer ${feishuShareServer.user_access_token}`;
+      if (feConfigs.feishu_auth_robot_client_id) {
+        config.headers['Authorization'] = `Bearer ${feishuShareServer.user_access_token}`;
+      } else {
+        const { data } = await axios.post<{ tenant_access_token: string }>(
+          `${feishuBaseUrl}/open-apis/auth/v3/tenant_access_token/internal`,
+          {
+            app_id: feishuShareServer.appId,
+            app_secret: feishuShareServer.appSecret
+          }
+        );
+
+        config.headers['Authorization'] = `Bearer ${data.tenant_access_token}`;
+      }
       config.headers['Content-Type'] = 'application/json; charset=utf-8';
     }
     return config;

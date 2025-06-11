@@ -115,12 +115,13 @@ const Info = ({ datasetId }: { datasetId: string }) => {
     const serverConfig: any = { id: datasetDetail._id };
 
     const needAuth =
-      (datasetDetail.type === DatasetTypeEnum.feishuPrivate &&
+      feConfigs?.feishu_auth_robot_client_id &&
+      ((datasetDetail.type === DatasetTypeEnum.feishuPrivate &&
         !datasetDetail.apiDatasetServer?.feishuPrivateServer?.user_access_token) ||
-      (datasetDetail.type === DatasetTypeEnum.feishuShare &&
-        !datasetDetail.apiDatasetServer?.feishuShareServer?.user_access_token) ||
-      (datasetDetail.type === DatasetTypeEnum.feishuKnowledge &&
-        !datasetDetail.apiDatasetServer?.feishuKnowledgeServer?.user_access_token);
+        (datasetDetail.type === DatasetTypeEnum.feishuShare &&
+          !datasetDetail.apiDatasetServer?.feishuShareServer?.user_access_token) ||
+        (datasetDetail.type === DatasetTypeEnum.feishuKnowledge &&
+          !datasetDetail.apiDatasetServer?.feishuKnowledgeServer?.user_access_token));
 
     let shouldSetDataset = false;
 
@@ -173,7 +174,8 @@ const Info = ({ datasetId }: { datasetId: string }) => {
     datasetDetail.apiDatasetServer?.feishuShareServer?.user_access_token,
     datasetDetail.apiDatasetServer?.feishuShareServer,
     datasetDetail.apiDatasetServer?.feishuKnowledgeServer,
-    datasetDetail.apiDatasetServer?.feishuKnowledgeServer?.user_access_token
+    datasetDetail.apiDatasetServer?.feishuKnowledgeServer?.user_access_token,
+    feConfigs?.feishu_auth_robot_client_id
   ]);
 
   const isTraining = rebuildingCount > 0 || trainingCount > 0;
@@ -555,12 +557,12 @@ const Info = ({ datasetId }: { datasetId: string }) => {
           {...editedAPIDataset}
           title={t('dataset:edit_dataset_config')}
           onClose={() => setEditedAPIDataset(undefined)}
-          onEdit={(data) =>
+          onEdit={(data) => {
             updateDataset({
               id: datasetId,
               apiDatasetServer: data.apiDatasetServer
-            })
-          }
+            });
+          }}
         />
       )}
     </Box>
