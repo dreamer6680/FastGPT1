@@ -20,7 +20,7 @@ async function resetExpiredPswHandler(
 ): Promise<resetExpiredPswResponse> {
   const newPsw = req.body.newPsw;
   const { userId } = await authCert({ req, authToken: true });
-  const user = await MongoUser.findById(userId, 'passwordUpdateTime username').lean();
+  const user = await MongoUser.findById(userId, 'passwordUpdateTime username password').lean();
 
   if (!user) {
     return Promise.reject('The password has not expired');

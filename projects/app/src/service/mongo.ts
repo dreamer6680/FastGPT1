@@ -3,40 +3,69 @@ import { hashStr } from '@fastgpt/global/common/string/tools';
 import { createDefaultTeam } from '@fastgpt/service/support/user/team/controller';
 import { exit } from 'process';
 import { mongoSessionRun } from '@fastgpt/service/common/mongo/sessionRun';
+import { UserStatusEnum } from '@fastgpt/global/support/user/constant';
 
 export async function initRootUser(retry = 3): Promise<any> {
   try {
-    const rootUser = await MongoUser.findOne({
-      username: 'root'
+    const systemUser = await MongoUser.findOne({
+      username: 'system'
+    });
+    const teamUser = await MongoUser.findOne({
+      username: 'team'
+    });
+    const logUser = await MongoUser.findOne({
+      username: 'log'
     });
     const psw = process.env.DEFAULT_ROOT_PSW || '123456';
 
-    let rootId = rootUser?._id || '';
-
+    let systemId = systemUser?._id || '';
+    let teamId = teamUser?._id || '';
+    let logId = logUser?._id || '';
     await mongoSessionRun(async (session) => {
       // init root user
-      if (rootUser) {
-        await rootUser.updateOne({
-          password: hashStr(psw)
-        });
-      } else {
-        const [{ _id }] = await MongoUser.create(
+      if (!systemId && !teamId && !logId) {
+        const [{ _id: sId }] = await MongoUser.create(
           [
             {
-              username: 'root',
-              password: hashStr(psw)
+              username: 'system',
+              password: hashStr(psw),
+              status: UserStatusEnum.admin
             }
           ],
           { session, ordered: true }
         );
-        rootId = _id;
+        systemId = sId;
+        const [{ _id: tId }] = await MongoUser.create(
+          [
+            {
+              username: 'team',
+              password: hashStr(psw),
+              status: UserStatusEnum.admin
+            }
+          ],
+          { session, ordered: true }
+        );
+        teamId = tId;
+        const [{ _id: lId }] = await MongoUser.create(
+          [
+            {
+              username: 'log',
+              password: hashStr(psw),
+              status: UserStatusEnum.admin
+            }
+          ],
+          { session, ordered: true }
+        );
+        logId = lId;
       }
       // init root team
-      await createDefaultTeam({ userId: rootId, session });
+      await createDefaultTeam({ userId: systemId, session });
+      await createDefaultTeam({ userId: teamId, session });
+      await createDefaultTeam({ userId: logId, session });
     });
 
     console.log(`root user init:`, {
-      username: 'root',
+      username: 'system,team,log',
       password: psw
     });
   } catch (error) {

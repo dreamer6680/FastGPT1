@@ -9,6 +9,7 @@ import { authCert } from '../auth/common';
 import { MongoUser } from '../../user/schema';
 import { ERROR_ENUM } from '@fastgpt/global/common/error/errorCode';
 import { type ApiRequestProps } from '../../../type/next';
+import { UserStatusEnum } from '@fastgpt/global/support/user/constant';
 
 /* auth user role  */
 export async function authUserPer(props: AuthModeType): Promise<
@@ -46,7 +47,7 @@ export const authSystemAdmin = async ({ req }: { req: ApiRequestProps }) => {
       _id: result.userId
     });
 
-    if (user && user.username !== 'root') {
+    if (user && user.status !== UserStatusEnum.admin) {
       return Promise.reject(ERROR_ENUM.unAuthorization);
     }
     return result;

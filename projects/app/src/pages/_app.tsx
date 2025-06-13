@@ -10,11 +10,12 @@ import { useInitApp } from '@/web/context/useInitApp';
 import { useTranslation } from 'next-i18next';
 import '@/web/styles/reset.scss';
 import NextHead from '@/components/common/NextHead';
-import { type ReactElement, useEffect } from 'react';
+import { type ReactElement, useEffect, useRef } from 'react';
 import { type NextPage } from 'next';
 import { getWebReqUrl } from '@fastgpt/web/common/system/utils';
 import SystemStoreContextProvider from '@fastgpt/web/context/useSystem';
 import { useRouter } from 'next/router';
+import { loginOut } from '@/web/support/user/api';
 
 type NextPageWithLayout = NextPage & {
   setLayout?: (page: ReactElement) => JSX.Element;
@@ -53,6 +54,36 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 
   const router = useRouter();
   const showHead = !router?.pathname || !routesWithCustomHead.includes(router.pathname);
+
+  const IDLE_TIMEOUT = 1 * 60 * 1000; // 30分钟
+  const idleTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const resetTimer = () => {
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => {
+      handleIdle();
+    }, IDLE_TIMEOUT);
+  };
+
+  const handleIdle = () => {
+    loginOut().then(() => {
+      router.replace('/login');
+    });
+  };
+
+  useEffect(() => {
+    const events = ['mousemove', 'mousedown', 'click', 'scroll', 'keypress'];
+
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+
+    resetTimer(); // 初始化计时器
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [resetTimer]);
 
   return (
     <>
