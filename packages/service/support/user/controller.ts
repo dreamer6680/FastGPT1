@@ -43,6 +43,8 @@ export async function getUserDetail({
     username: user.username,
     avatar: tmb.avatar,
     timezone: user.timezone,
+    lastLoginTime: user.lastLoginTime,
+    role: user.role,
     promotionRate: user.promotionRate,
     team: tmb,
     notificationAccount: tmb.notificationAccount,

@@ -50,6 +50,14 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: TeamMemberCollectionName
   },
+  lastLoginTime: {
+    type: Date,
+    default: () => new Date()
+  },
+  role: {
+    type: String,
+    default: 'user'
+  },
 
   inviterId: {
     // 谁邀请注册的

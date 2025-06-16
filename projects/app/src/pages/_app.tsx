@@ -55,7 +55,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   const showHead = !router?.pathname || !routesWithCustomHead.includes(router.pathname);
 
-  const IDLE_TIMEOUT = 1 * 60 * 1000; // 30分钟
+  const IDLE_TIMEOUT = 30 * 60 * 1000; // 30分钟
   const idleTimer = useRef<NodeJS.Timeout | null>(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

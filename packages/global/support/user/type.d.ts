@@ -6,6 +6,8 @@ import type { TeamTmbItemType } from './team/type';
 export type UserModelSchema = {
   _id: string;
   username: string;
+  lastLoginTime: Date;
+  role: string;
   password: string;
   promotionRate: number;
   inviterId?: string;
@@ -31,6 +33,8 @@ export type UserType = {
   notificationAccount?: string;
   permission: TeamPermission;
   contact?: string;
+  lastLoginTime: Date;
+  role: string;
 };
 
 export type SourceMemberType = {

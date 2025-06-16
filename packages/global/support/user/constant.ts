@@ -1,7 +1,6 @@
 export enum UserStatusEnum {
   active = 'active',
-  forbidden = 'forbidden',
-  admin = 'admin'
+  forbidden = 'forbidden'
 }
 export const userStatusMap = {
   [UserStatusEnum.active]: {
@@ -9,9 +8,6 @@ export const userStatusMap = {
   },
   [UserStatusEnum.forbidden]: {
     label: 'support.user.status.forbidden'
-  },
-  [UserStatusEnum.admin]: {
-    label: 'support.user.status.admin'
   }
 };
 

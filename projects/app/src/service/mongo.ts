@@ -29,7 +29,7 @@ export async function initRootUser(retry = 3): Promise<any> {
             {
               username: 'system',
               password: hashStr(psw),
-              status: UserStatusEnum.admin
+              role: 'admin'
             }
           ],
           { session, ordered: true }
@@ -40,7 +40,7 @@ export async function initRootUser(retry = 3): Promise<any> {
             {
               username: 'team',
               password: hashStr(psw),
-              status: UserStatusEnum.admin
+              role: 'admin'
             }
           ],
           { session, ordered: true }
@@ -51,7 +51,7 @@ export async function initRootUser(retry = 3): Promise<any> {
             {
               username: 'log',
               password: hashStr(psw),
-              status: UserStatusEnum.admin
+              role: 'admin'
             }
           ],
           { session, ordered: true }

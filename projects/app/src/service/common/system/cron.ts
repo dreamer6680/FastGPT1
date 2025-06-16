@@ -13,11 +13,18 @@ import { addHours } from 'date-fns';
 import { getScheduleTriggerApp } from '@/service/core/app/utils';
 import { clearExpiredRawTextBufferCron } from '@fastgpt/service/common/buffer/rawText/controller';
 import { clearExpiredDatasetImageCron } from '@fastgpt/service/core/dataset/image/controller';
+import { getUserList } from '@/service/core/user/utils';
 
 // Try to run train every minute
 const setTrainingQueueCron = () => {
   setCron('*/1 * * * *', () => {
     startTrainingQueue();
+  });
+};
+
+const setUserListCron = () => {
+  setCron('*/1 * * * *', () => {
+    getUserList();
   });
 };
 
@@ -83,6 +90,7 @@ const scheduleTriggerAppCron = () => {
 export const startCron = () => {
   setTrainingQueueCron();
   setClearTmpUploadFilesCron();
+  setUserListCron();
   clearInvalidDataCron();
   scheduleTriggerAppCron();
   clearExpiredRawTextBufferCron();
