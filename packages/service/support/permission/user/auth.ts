@@ -47,7 +47,7 @@ export const authSystemAdmin = async ({ req }: { req: ApiRequestProps }) => {
       _id: result.userId
     });
 
-    if (user && user.status !== UserStatusEnum.admin) {
+    if (user && user.role !== 'admin') {
       return Promise.reject(ERROR_ENUM.unAuthorization);
     }
     return result;
