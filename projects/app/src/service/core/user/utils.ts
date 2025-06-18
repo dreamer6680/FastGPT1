@@ -12,8 +12,6 @@ export async function getUserList(): Promise<void> {
 
   if (usersToSleep.length === 0) return;
 
-  console.log('usersToSleep', usersToSleep);
-
   // 构建批量更新操作
   const bulkOps = usersToSleep.map((user) => ({
     updateOne: {
