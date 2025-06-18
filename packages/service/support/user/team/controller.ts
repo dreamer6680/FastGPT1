@@ -247,3 +247,34 @@ export async function updateTeam({
     }
   });
 }
+
+export async function addTeamMember({
+  userId,
+  teamId,
+  memberName,
+  session
+}: {
+  userId: string;
+  teamId?: string;
+  memberName: string;
+  session: ClientSession;
+}) {
+  await MongoTeamMember.findOneAndUpdate(
+    {
+      userId: userId,
+      teamId: teamId
+    },
+    {
+      userId: userId,
+      teamId: teamId,
+      role: 'owner',
+      name: memberName,
+      status: TeamMemberStatusEnum.active
+    },
+    {
+      session,
+      upsert: true,
+      returnOriginal: false
+    }
+  );
+}

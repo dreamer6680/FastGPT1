@@ -1,9 +1,8 @@
 import { MongoUser } from '@fastgpt/service/support/user/schema';
 import { hashStr } from '@fastgpt/global/common/string/tools';
-import { createDefaultTeam } from '@fastgpt/service/support/user/team/controller';
+import { createDefaultTeam, addTeamMember } from '@fastgpt/service/support/user/team/controller';
 import { exit } from 'process';
 import { mongoSessionRun } from '@fastgpt/service/common/mongo/sessionRun';
-import { UserStatusEnum } from '@fastgpt/global/support/user/constant';
 
 export async function initRootUser(retry = 3): Promise<any> {
   try {
@@ -59,9 +58,15 @@ export async function initRootUser(retry = 3): Promise<any> {
         logId = lId;
       }
       // init root team
-      await createDefaultTeam({ userId: systemId, session });
-      await createDefaultTeam({ userId: teamId, session });
-      await createDefaultTeam({ userId: logId, session });
+      const teamb = await createDefaultTeam({ userId: systemId, session });
+      await addTeamMember({
+        userId: systemId,
+        teamId: teamb?.teamId,
+        memberName: 'system',
+        session
+      });
+      await addTeamMember({ userId: logId, teamId: teamb?.teamId, memberName: 'log', session });
+      await addTeamMember({ userId: teamId, teamId: teamb?.teamId, memberName: 'team', session });
     });
 
     console.log(`root user init:`, {
