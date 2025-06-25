@@ -7,12 +7,17 @@ export enum UserErrEnum {
   unAuthRole = 'unAuthRole',
   account_psw_error = 'account_psw_error',
   balanceNotEnough = 'balanceNotEnough',
+  signature_error = 'signature_error',
   unAuthSso = 'unAuthSso'
 }
 const errList = [
   {
     statusText: UserErrEnum.notUser,
     message: i18nT('common:code_error.account_not_found')
+  },
+  {
+    statusText: UserErrEnum.signature_error,
+    message: i18nT('common:code_error.signature_error')
   },
   {
     statusText: UserErrEnum.userExist,

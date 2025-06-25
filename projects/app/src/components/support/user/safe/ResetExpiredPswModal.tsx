@@ -9,6 +9,8 @@ import { checkPasswordRule } from '@fastgpt/global/common/string/password';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { useUserStore } from '@/web/support/user/useUserStore';
 import Icon from '@fastgpt/web/components/common/Icon';
+import crypto from 'crypto';
+import { hashStr } from '@fastgpt/global/common/string/tools';
 
 type FormType = {
   newPsw: string;
@@ -109,7 +111,17 @@ const ResetPswModal = () => {
       <ModalFooter>
         <Button
           isLoading={isSubmitting || isFetching}
-          onClick={handleSubmit((data) => onSubmit(data.newPsw), onSubmitErr)}
+          onClick={handleSubmit(
+            (data) =>
+              onSubmit(
+                data.newPsw,
+                crypto
+                  .createHash('sha256')
+                  .update(hashStr(data.newPsw) + userInfo?.username)
+                  .digest('hex')
+              ),
+            onSubmitErr
+          )}
         >
           {t('common:Confirm')}
         </Button>

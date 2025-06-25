@@ -7,22 +7,27 @@ import { useRequest2 } from '@fastgpt/web/hooks/useRequest';
 import { updatePasswordByOld } from '@/web/support/user/api';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { checkPasswordRule } from '@fastgpt/global/common/string/password';
+import crypto from 'crypto';
+import { hashStr } from '@fastgpt/global/common/string/tools';
+import { useUserStore } from '@/web/support/user/useUserStore';
 
 type FormType = {
   oldPsw: string;
   newPsw: string;
   confirmPsw: string;
+  signature: string;
 };
 
 const UpdatePswModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-
-  const { register, handleSubmit, getValues } = useForm<FormType>({
+  const { userInfo } = useUserStore();
+  const { register, handleSubmit, getValues, setValue } = useForm<FormType>({
     defaultValues: {
       oldPsw: '',
       newPsw: '',
-      confirmPsw: ''
+      confirmPsw: '',
+      signature: ''
     }
   });
 
@@ -74,6 +79,13 @@ const UpdatePswModal = ({ onClose }: { onClose: () => void }) => {
                 if (!checkPasswordRule(val)) {
                   return t('login:password_tip');
                 }
+                setValue(
+                  'signature',
+                  crypto
+                    .createHash('sha256')
+                    .update(hashStr(getValues('oldPsw')) + hashStr(val) + userInfo?.username)
+                    .digest('hex')
+                );
                 return true;
               }
             })}

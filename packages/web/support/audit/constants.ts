@@ -7,6 +7,31 @@ export const adminAuditLogMap = {
     typeLabel: i18nT('account_team:admin_login'),
     params: {} as { name?: string }
   },
+  [AdminAuditEventEnum.ADMIN_UPDATE_PASSWORD]: {
+    content: i18nT('account_team:log_admin_update_password'),
+    typeLabel: i18nT('account_team:admin_update_password'),
+    params: {} as { name?: string }
+  },
+  [AdminAuditEventEnum.ADMIN_LOGINOUT]: {
+    content: i18nT('account_team:log_admin_loginout'),
+    typeLabel: i18nT('account_team:admin_loginout'),
+    params: {} as { name?: string }
+  },
+  [AdminAuditEventEnum.SYSTEM_UNAUTHORIZED_ACCESS]: {
+    content: i18nT('account_team:log_system_unauthorized_access'),
+    typeLabel: i18nT('account_team:unauthorized_access'),
+    params: {} as { name?: string }
+  },
+  [AdminAuditEventEnum.TEAM_UNAUTHORIZED_ACCESS]: {
+    content: i18nT('account_team:log_team_unauthorized_access'),
+    typeLabel: i18nT('account_team:unauthorized_access'),
+    params: {} as { name?: string }
+  },
+  [AdminAuditEventEnum.LOG_UNAUTHORIZED_ACCESS]: {
+    content: i18nT('account_team:log_log_unauthorized_access'),
+    typeLabel: i18nT('account_team:unauthorized_access'),
+    params: {} as { name?: string }
+  },
   [AdminAuditEventEnum.ADMIN_UPDATE_SYSTEM_MODAL]: {
     content: i18nT('account_team:log_admin_update_system_modal'),
     typeLabel: i18nT('account_team:admin_update_system_modal'),
@@ -120,6 +145,11 @@ export const auditLogMap = {
   [AuditEventEnum.LOGIN]: {
     content: i18nT('account_team:log_login'),
     typeLabel: i18nT('account_team:login'),
+    params: {} as { name?: string }
+  },
+  [AuditEventEnum.LOGINOUT]: {
+    content: i18nT('account_team:log_loginout'),
+    typeLabel: i18nT('account_team:loginout'),
     params: {} as { name?: string }
   },
   [AuditEventEnum.CREATE_INVITATION_LINK]: {

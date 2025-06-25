@@ -51,27 +51,40 @@ export const postRegister = ({
 export const postFindPassword = ({
   username,
   code,
-  password
+  password,
+  signature
 }: {
   username: string;
   code: string;
   password: string;
+  signature: string;
 }) =>
   POST<ResLogin>(`/proApi/support/user/account/password/updateByCode`, {
     username,
     code,
-    password: hashStr(password)
+    password: hashStr(password),
+    signature
   });
 
-export const updatePasswordByOld = ({ oldPsw, newPsw }: { oldPsw: string; newPsw: string }) =>
+export const updatePasswordByOld = ({
+  oldPsw,
+  newPsw,
+  signature
+}: {
+  oldPsw: string;
+  newPsw: string;
+  signature: string;
+}) =>
   POST('/support/user/account/updatePasswordByOld', {
     oldPsw: hashStr(oldPsw),
-    newPsw: hashStr(newPsw)
+    newPsw: hashStr(newPsw),
+    signature
   });
 
-export const resetPassword = (newPsw: string) =>
+export const resetPassword = (newPsw: string, signature: string) =>
   POST('/support/user/account/resetExpiredPsw', {
-    newPsw: hashStr(newPsw)
+    newPsw: hashStr(newPsw),
+    signature
   });
 
 /* Check the whether password has expired */

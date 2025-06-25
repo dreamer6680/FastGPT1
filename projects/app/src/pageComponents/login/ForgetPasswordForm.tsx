@@ -10,6 +10,7 @@ import { useSystemStore } from '@/web/common/system/useSystemStore';
 import { useTranslation } from 'next-i18next';
 import { useRequest2 } from '@fastgpt/web/hooks/useRequest';
 import { checkPasswordRule } from '@fastgpt/global/common/string/password';
+import crypto from 'crypto';
 
 interface Props {
   setPageType: Dispatch<`${LoginPageTypeEnum}`>;
@@ -59,7 +60,11 @@ const RegisterForm = ({ setPageType, loginSuccess }: Props) => {
         await postFindPassword({
           username,
           code,
-          password
+          password,
+          signature: crypto
+            .createHash('sha256')
+            .update(password + username)
+            .digest('hex')
         })
       );
       toast({

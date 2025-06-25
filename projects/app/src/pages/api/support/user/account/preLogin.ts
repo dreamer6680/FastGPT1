@@ -11,7 +11,9 @@ export type preLoginQuery = {
 
 export type preLoginBody = {};
 
-export type preLoginResponse = { code: string };
+export type preLoginResponse = {
+  code: string;
+};
 
 async function handler(
   req: ApiRequestProps<preLoginBody, preLoginQuery>,

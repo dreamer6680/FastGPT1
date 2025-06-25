@@ -10,6 +10,8 @@ import { getDocPath } from '@/web/common/system/doc';
 import { useTranslation } from 'next-i18next';
 import FormLayout from './FormLayout';
 import { useRequest2 } from '@fastgpt/web/hooks/useRequest';
+import crypto from 'crypto';
+import { hashStr } from '@fastgpt/global/common/string/tools';
 
 interface Props {
   setPageType: Dispatch<`${LoginPageTypeEnum}`>;
@@ -34,11 +36,16 @@ const LoginForm = ({ setPageType, loginSuccess }: Props) => {
   const { runAsync: onclickLogin, loading: requesting } = useRequest2(
     async ({ username, password }: LoginFormType) => {
       const { code } = await getPreLogin(username);
+      const signature = crypto
+        .createHash('sha256')
+        .update(code + hashStr(password) + username)
+        .digest('hex');
       loginSuccess(
         await postLogin({
+          code,
           username,
           password,
-          code
+          signature
         })
       );
       toast({

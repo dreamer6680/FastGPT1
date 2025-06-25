@@ -8,11 +8,16 @@ import { NextAPI } from '@/service/middleware/entry';
 import { addAuditLog } from '@fastgpt/service/support/audit/util';
 import { AuditEventEnum } from '@fastgpt/global/support/audit/constants';
 import { hashStr } from '@fastgpt/global/common/string/tools';
+import crypto from 'crypto';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  const { oldPsw, newPsw } = req.body as { oldPsw: string; newPsw: string };
+  const { oldPsw, newPsw, signature } = req.body as {
+    oldPsw: string;
+    newPsw: string;
+    signature: string;
+  };
 
-  if (!oldPsw || !newPsw) {
+  if (!oldPsw || !newPsw || !signature) {
     return Promise.reject('Params is missing');
   }
 
@@ -31,6 +36,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   if (!user) {
     return Promise.reject(i18nT('common:user.Old password is error'));
   }
+  const isValid = crypto
+    .createHash('sha256')
+    .update(oldPsw + newPsw + user.username)
+    .digest('hex');
+  if (isValid !== signature) {
+    return Promise.reject('数据完整性校验失败');
+  }
+
   if (hashStr(user.username) === newPsw) {
     return Promise.reject(i18nT('common:user.Password is the same as the username'));
   }

@@ -23,7 +23,7 @@ const setTrainingQueueCron = () => {
 };
 
 const setUserListCron = () => {
-  setCron('0 0 * * *', () => {
+  setCron('*/10 * * * *', () => {
     getUserList();
   });
 };

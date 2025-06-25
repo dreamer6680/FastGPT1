@@ -10,6 +10,7 @@ export type PostLoginProps = {
   username: string;
   password: string;
   code: string;
+  signature: string;
 };
 
 export type OauthLoginProps = {

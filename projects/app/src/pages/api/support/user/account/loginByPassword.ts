@@ -14,21 +14,52 @@ import { AuditEventEnum } from '@fastgpt/global/support/audit/constants';
 import { UserAuthTypeEnum } from '@fastgpt/global/support/user/auth/constants';
 import { authCode } from '@fastgpt/service/support/user/auth/controller';
 import { createUserSession } from '@fastgpt/service/support/user/session';
+import {
+  checkUserLoginLock,
+  recordLoginFailure,
+  clearLoginFailures
+} from '@fastgpt/service/support/user/loginLock/controller';
 import requestIp from 'request-ip';
+import crypto from 'crypto';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { username, password, code } = req.body as PostLoginProps;
+  const { username, password, code, signature } = req.body as PostLoginProps;
 
-  if (!username || !password || !code) {
+  if (!username || !password || !code || !signature) {
     return Promise.reject(CommonErrEnum.invalidParams);
   }
 
-  // Auth prelogin code
+  // 检查用户是否被锁定
+  const lockInfo = await checkUserLoginLock(username);
+  if (lockInfo.isLocked) {
+    return Promise.reject(`账号已被锁定，请${lockInfo.remainingLockTime}分钟后再试`);
+  }
+
+  // 验证密码签名
   await authCode({
     key: username,
     code,
     type: UserAuthTypeEnum.login
   });
+  console.log('code', code);
+  console.log(
+    'signature',
+    crypto
+      .createHash('sha256')
+      .update(code + password + username)
+      .digest('hex')
+  );
+  console.log('password', password);
+  console.log('username', username);
+  console.log('signature', signature);
+
+  const isValid = crypto
+    .createHash('sha256')
+    .update(code + password + username)
+    .digest('hex');
+  if (isValid !== signature) {
+    return Promise.reject(UserErrEnum.signature_error);
+  }
 
   // 检测用户是否存在
   const authCert = await MongoUser.findOne(
@@ -38,10 +69,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     'status'
   );
   if (!authCert) {
+    // 记录登录失败
+    await recordLoginFailure(username);
     return Promise.reject(UserErrEnum.account_psw_error);
   }
 
   if (authCert.status === UserStatusEnum.forbidden) {
+    // 记录登录失败
+    await recordLoginFailure(username);
     return Promise.reject('Invalid account!');
   }
 
@@ -51,8 +86,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 
   if (!user) {
-    return Promise.reject(UserErrEnum.account_psw_error);
+    // 记录登录失败
+    const failureInfo = await recordLoginFailure(username);
+
+    if (failureInfo.isLocked) {
+      return Promise.reject(`密码错误，账号已被锁定，请${failureInfo.remainingLockTime}分钟后再试`);
+    } else {
+      return Promise.reject(`密码错误，还剩${failureInfo.remainingAttempts}次尝试机会`);
+    }
   }
+
+  // 登录成功，清除失败记录
+  await clearLoginFailures(username);
 
   const userDetail = await getUserDetail({
     tmbId: user?.lastLoginTmbId,
