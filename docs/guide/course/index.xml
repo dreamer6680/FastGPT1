@@ -9,7 +9,7 @@
 应用 link点击「应用」按钮来新建一个应用，这里有四个模板，我们选择「知识库 + 对话引导」。
 应用创建后来再应用详情页找到「知识库」模块，把我们刚刚创建的知识库添加进去。
 添加完知识库后记得点击「保存并预览」，这样我们的应用就和知识库关联起来了。
-然后我们就可以愉快的开始聊天啦。</description></item><item><title>AI 相关参数配置说明</title><link>https://doc.tryfastgpt.ai/docs/guide/course/ai_settings/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://doc.tryfastgpt.ai/docs/guide/course/ai_settings/</guid><description>在 FastGPT 的 AI 对话模块中，有一个 AI 高级配置，里面包含了 AI 模型的参数配置，本文详细介绍这些配置的含义。
+然后我们就可以愉快地开始聊天啦。</description></item><item><title>AI 相关参数配置说明</title><link>https://doc.tryfastgpt.ai/docs/guide/course/ai_settings/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://doc.tryfastgpt.ai/docs/guide/course/ai_settings/</guid><description>在 FastGPT 的 AI 对话模块中，有一个 AI 高级配置，里面包含了 AI 模型的参数配置，本文详细介绍这些配置的含义。
 流响应（高级编排 AI 对话 特有） link旧版名字叫做：返回 AI 内容；新版改名：流响应。
 这是一个开关，打开的时候，当 AI 对话模块运行时，会将其输出的内容返回到浏览器（API响应）； 如果关闭，会强制使用非流模式调用模型，并且 AI 输出的内容不会返回到浏览器，但是生成的内容仍可以通过【AI回复】进行输出。你可以将【AI回复】连接到其他模块中进行二次使用。
 最大上下文 link代表模型最多容纳的文字数量。
