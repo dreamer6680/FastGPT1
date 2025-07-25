@@ -67,6 +67,7 @@ code {
   padding: 0.2em 0.4em !important;
   margin: 0 0.2em !important;
   color: #2563eb !important;
+  border: none !important;
 }
 
 /* 代码块中的滚动条样式优化 */
@@ -251,8 +252,8 @@ div[data-rmiz-modal-overlay='visible'] {
 }
 
 .dark {
-  --color-fd-background: #060c1a;
-  --color-fd-foreground: hsl(220, 60%, 94.5%);
+  --color-fd-background: #000000;
+  --color-fd-foreground: rgba(255, 255, 255, 0.7);
   --color-fd-muted: hsl(220, 50%, 10%);
   --color-fd-muted-foreground: hsl(220, 30%, 65%);
   --color-fd-popover: hsl(220, 50%, 10%);
